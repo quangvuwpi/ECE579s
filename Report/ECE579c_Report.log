@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.2.23)  3 APR 2017 21:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.2.23)  4 APR 2017 18:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -373,21 +373,21 @@ Underfull \hbox (badness 10000) in paragraph at lines 84--85
 
  []
 
-<images/aes_annotate.png, id=17, 537.00626pt x 340.27126pt>
+[2] <images/aes_annotate.png, id=21, 537.00626pt x 340.27126pt>
 File: images/aes_annotate.png Graphic file (type png)
 
 <use images/aes_annotate.png>
-Package pdftex.def Info: images/aes_annotate.png used on input line 124.
+Package pdftex.def Info: images/aes_annotate.png used on input line 137.
 (pdftex.def)             Requested size: 241.65057pt x 153.12064pt.
 
-<images/aes_acquisition_annotate.png, id=19, 496.4949pt x 216.81pt>
+<images/aes_acquisition_annotate.png, id=23, 496.4949pt x 216.81pt>
 File: images/aes_acquisition_annotate.png Graphic file (type png)
 
 <use images/aes_acquisition_annotate.png>
 Package pdftex.def Info: images/aes_acquisition_annotate.png used on input line
- 130.
+ 143.
 (pdftex.def)             Requested size: 223.42064pt x 97.56358pt.
- (./ECE579c_Report.bbl [2])
+ (./ECE579c_Report.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -399,9 +399,7 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[3
-
- <./images/aes_annotate.png> <./images/aes_acquisition_annotate.png>]
+[3 <./images/aes_annotate.png> <./images/aes_acquisition_annotate.png>]
 (./ECE579c_Report.aux) ) 
 Here is how much of TeX's memory you used:
  3670 strings out of 494910
@@ -423,7 +421,7 @@ t/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts
 mb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/
 texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ECE579c_Report.pdf (3 pages, 212866 bytes).
+Output written on ECE579c_Report.pdf (3 pages, 215198 bytes).
 PDF statistics:
  68 PDF objects out of 1000 (max. 8388607)
  46 compressed objects within 1 object stream

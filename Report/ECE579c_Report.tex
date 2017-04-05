@@ -62,9 +62,9 @@ Another important factor in determining the optimal sampling rate is the microar
 
 The targeted ATMega328p has the following architectural characteristics that reduces its maximum MIPS:
 
-\textit{8-bit architecture} - drastically reduces the performance of frequently used operations such as multiplication and division when compared to a 32-bit microprocessor (e.g. ARM). The effect is especially noticeable during RSA encryption/decryption operations. For AES, there should be virtually no difference in performance since all operations are byte-oriented.
+\subsubsection{8-bit architecture} drastically reduces the performance of frequently used operations such as multiplication and division when compared to a 32-bit microprocessor (e.g. ARM). The effect is especially noticeable during RSA encryption/decryption operations. For AES, there should be virtually no difference in performance since all operations are byte-oriented.
 
-\textit{Two-stage pipeline} - a design technique to optimize CPU excecution throughput: instructions are fetched then executed. While most of the instruction set executes in only one (1) clock cycle, the multiplication instruction takes two (2) cycle for the execution phase, which reduces MIPS count.
+\subsubsection{Two-stage pipeline} a design technique to optimize CPU excecution throughput: instructions are fetched then executed. While most of the instruction set executes in only one (1) clock cycle, the multiplication instruction takes two (2) cycle for the execution phase, which reduces MIPS count.
 
 \subsection{Captured Data Resolution}
 In telecommunication theory, the Shannon-Hartley theorem \cite{shannon1949communication} shows a relationship between the maximum signal bandwidth/frequency that can be transmitted over a channel and the observed noise level. The smaller the noise, or conversely the larger the Signal-to-Noise (SNR) ratio, the higher signal bandwidth/frequency one can send. The maximum theoretical limit is called the Nyquist rate which is twice the bandwidth of the channel. Basically, this theorem states that there is a minimum SNR required to allow sampling the signal at the optimal Nyquist sampling rate.
@@ -97,21 +97,34 @@ The target for this project is an 8-bit ATMega328p microprocessor running at 8MH
 The difference in clock frequency is important since this project is an attempt to show that less capable hardware can achieve the same result (i.e. capture data at good enough quality to carry out the same attack) given the same test environment. Fortunately, the data acquisition setup for this project is more than capable of capturing data at 32MS/s so if a faster target was available, the result would have been the same.
 
 \subsection{Data Acquisition}
-The Digilent Analog Discovery (AD) 2 data acquisition platform was used instead of the Tektronix 5054B oscilloscope.
+The Digilent Analog Discovery (AD) 2 data acquisition platform was used instead of the Tektronix 5054B oscilloscope. The cost for the AD2 platform at the time of writing is approximately \$280.
 
 The AD2 platform is capable of capturing data at a rate of up to 100MS/s and 14-bit resolution. The sampling rate is clearly much lower than the 2500MS/s rate used in the report but should be more than enough to capture highly accurate power consumption traces. There is also no problem with the data resolution since it is much higher than the 8-bit resolution of the Tektronix oscilloscope.
 
 \subsection{Custom Hardware}
 The custom hardware extension board exposes the BeagleBone Black's 3.3V power supply; which was then used as a power source for the target microprocessor. A $10\Omega$ series resistor was used instead of $100\Omega$ as mentioned in the report because it causes the target's supply voltage to drop too much and not allowing the target to run. 
 
+The report used a 5V supply voltage and therefore did not have this issue. The BeagleBone Black has a 5V power supply pin as well but the targeted ATMega328p (part of the CryptoCape) was wired to run on 3.3V supply, so 5V could not be used.
+
 \subsection{Software Setup}
 There are three (3) components to the software setup: data acquisition interfacing code, the targeted vulnerable cryptographic code and the key recovering code.
 
-\textit{Interfacing code} - the code was taken from a Github repository, which provides sample code for setting up scope triggering and recording of data at arbitrary sampling rate for the AD2 platform.
+\subsubsection{Interfacing code}
+The code was taken from a Github repository, which provides sample code for setting up scope triggering and recording of data at arbitrary sampling rate for the AD2 platform. The sample code was then modified to fit the need of this project.
 
-\textit{Vulnerable cryptography code} - the code is an Arduino sketch which performs single block AES-128 encryption in ECB mode in an infinite loop. The target code uses the same AESLib library that was used in the report. Additionally, the target toggles a GPIO pin to signal the start and end of the encryption code, which also triggers the data recording code.
+There are two (2) versions of trace capturing code, each uses a different mode of data capture: \textit{acquisition} and \textit{recording}. For the purpose of this project, \textit{acquisition} mode is chosen for the following reason:
 
-\textit{Key recovering code} - ideally, the captured traces would have been processed by the same CPA code used in the report. Unfortunately, the publicly available code on Github is either incomplete or dependent on a specific file format (WFM). Due to timing constraint, there was not enough time to modify the code to use the file produced by the data acquisition interfacing code.
+Acquisition mode allows fast and reliable data capture, which is neccessary for high sampling rate. However, the output buffer is limited to a maximum of 8192 sample points which may not be enough to capture an entire encryption operation, depending on the sampling rate.
+
+Recording mode allows arbitrary length buffer at the cost of acquisition speed. This mode does not guarantee  reliable data capture (i.e. lost sample points) and it is slower when initializing a capture buffer (i.e. the trace capture is delayed by a random amount of time).
+
+\subsubsection{Vulnerable cryptography code}
+The code is an Arduino sketch which performs single block AES-128 encryption in ECB mode in an infinite loop which fixed plaintext and key. The target code uses the same AESLib library that was used in the report.
+
+Additionally, the target toggles a GPIO pin to signal the start and end of the encryption code, which also triggers the data recording code.
+
+\subsubsection{Key recovering code}
+Ideally, the captured traces would have been processed by the same CPA code used in the report. Unfortunately, the publicly available code on Github is either incomplete or dependent on a specific file format (WFM). Due to timing constraint, there was not enough time to modify the code to use the file produced by the data acquisition interfacing code.
 
 \section{Results}
 A screenshot of the power consumption waveform captured in real-time at 8MS/s while the targeted ATMega328p performs AES-128 encryption in an infinite loop is shown in Figure \ref{fig:aes}.
@@ -135,7 +148,10 @@ Figure \ref{fig:aes_avg} shows the mean trace of 600 encryption rounds, captured
 \section{Conclusion}
 Figures \ref{fig:aes} and \ref{fig:aes_avg} show that the triggering code synch up the traces well; with extra signal processing (e.g. high-pass filtering) the resulting traces should be useable for a power analysis attack.
 
-Even though this project cannot offer concrete results due to timing constraint that an inexpensive piece of equipment can achieve the same result as an expensive one (i.e. enable effective power analysis attack); hopefully the theoretical points made are convincing enough to encourage further work on this topic.
+Even though this project cannot offer concrete results, due to timing constraint, that an inexpensive piece of equipment can achieve the same result as an expensive one (i.e. enable effective power analysis attack); hopefully the theoretical points made are convincing enough to encourage further work on this topic.
+
+\section{Appendix}
+All of the code used is published on Github at the following URL: https://github.com/quangvuwpi/ECE579s
 
 %\bibliographystyle{IEEEtran}
 \bibliographystyle{IEEETR}
